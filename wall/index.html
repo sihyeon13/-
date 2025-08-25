@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>네모 벽 뒤에 숨어있는 캐릭터</title>
+	<style>
+		body {
+			margin: 0;
+			height: 100vh;
+			background: #f0f0f0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.wall-container {
+			position: relative;
+			width: 320px;
+			height: 320px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.wall {
+			width: 200px;
+			height: 200px;
+			background: #555;
+			border-radius: 18px;
+			position: relative;
+			z-index: 2;
+			/* 그림자 제거 */
+			box-shadow: none;
+			transition: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+			.wall:hover {
+				/* 그림자 효과 없이 유지 */
+				box-shadow: none;
+			}
+
+		.character {
+			position: absolute;
+			left: 200px;
+			top: 50%;
+			transform: translateY(-50%) translateX(-90px) scale(0.85) scaleX(-1);
+			opacity: 0;
+			transition: transform 0.5s cubic-bezier(.71,-0.01,.45,1.41), opacity 0.3s;
+			z-index: 1;
+			pointer-events: none;
+			max-width: 120px;
+			max-height: 200px;
+			width: auto;
+			height: auto;
+		}
+
+		.wall-container.show .character,
+		.wall:hover ~ .character {
+			transform: translateY(-50%) translateX(30px) scale(1.1) scaleX(-1);
+			opacity: 1;
+		}
+	</style>
+</head>
+<body>
+	<div class="wall-container" id="wall-container">
+		<div class="wall" id="wall"></div>
+		<img class="character" src="ritsu.png" alt="ritsu">
+	</div>
+	<script>
+		// 모바일 터치/클릭 시 벽을 누르면 캐릭터 토글
+		const wallContainer = document.getElementById('wall-container');
+		const wall = document.getElementById('wall');
+
+		let isTouchDevice = false;
+
+		// 터치 디바이스 감지
+		function detectTouchDevice() {
+			return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+		}
+		isTouchDevice = detectTouchDevice();
+
+		if (isTouchDevice) {
+			wall.addEventListener('click', function () {
+				wallContainer.classList.toggle('show');
+			});
+			// 바깥쪽 누르면 닫힘 (선택)
+			document.addEventListener('click', function (e) {
+				if (!wallContainer.contains(e.target)) {
+					wallContainer.classList.remove('show');
+				}
+			});
+		}
+	</script>
+</body>
+</html>
